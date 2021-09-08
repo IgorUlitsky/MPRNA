@@ -1,1 +1,2 @@
-/home/labs/ulitsky/shared/data/tiling/twistGFP_run3/groupRatios.txt
+C	C_Nuc	C_Cyt
+N	N_Nuc	N_Cyt

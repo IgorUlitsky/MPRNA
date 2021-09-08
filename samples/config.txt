@@ -1,1 +1,14 @@
-/home/labs/ulitsky/shared/data/tiling/twistGFP_run3/config.txt
+rootDir	/home/labs/ulitsky/shared/data/tiling/twistGFP_run3/
+groupsFile	groups.txt
+ratiosFile	ratios.txt
+groupRatiosFile	groupRatios.txt
+suffix	combined.txt
+outBase	~/twistGFP_rep3.processTwist
+repeatFile	/home/labs/ulitsky/shared/data/tiling/Design/NucLib2.overlapRepeats.txt
+featuresFile	/home/labs/ulitsky/shared/data/tiling/Design/NucLib2.noS.features.txt
+useUMIs	FALSE
+minWCEReads	10
+minInputReads	10
+minRatioReads	10
+pseudo	0.5
+

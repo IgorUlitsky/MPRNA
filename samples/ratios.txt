@@ -1,1 +1,12 @@
-/home/labs/ulitsky/shared/data/tiling/twistGFP_run3/ratios.txt
+C_rep1	AcGFP-C1-twist_Nuc_rep1	AcGFP-C1-twist_Cyt_rep1
+C_rep2	AcGFP-C1-twist_Nuc_rep2	AcGFP-C1-twist_Cyt_rep2
+C_rep3	AcGFP-C1-twist_Nuc_rep3	AcGFP-C1-twist_Cyt_rep3
+N_rep1	AcGFP-C1-twist_Nuc_rep1	AcGFP-C1-twist_Cyt_rep1
+N_rep2	AcGFP-C1-twist_Nuc_rep2	AcGFP-C1-twist_Cyt_rep2
+N_rep3	AcGFP-C1-twist_Nuc_rep3	AcGFP-C1-twist_Cyt_rep3
+C_exp_rep1	AcGFP-C1-twist_WCE_rep1	../twistGFP/TwistGFP_C1_input
+C_exp_rep2	AcGFP-C1-twist_WCE_rep2	../twistGFP/TwistGFP_C1_input
+C_exp_rep3	AcGFP-C1-twist_WCE_rep3	../twistGFP/TwistGFP_C1_input
+N_exp_rep1	AcGFP-N1-twist_WCE_rep1	../twistGFP/TwistGFP_N1_input
+N_exp_rep2	AcGFP-N1-twist_WCE_rep2	../twistGFP/TwistGFP_N1_input
+N_exp_rep3	AcGFP-N1-twist_WCE_rep3	../twistGFP/TwistGFP_N1_input
