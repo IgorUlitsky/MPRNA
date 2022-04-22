@@ -4,7 +4,9 @@ This suite of tools contains methods for analysis of MPRNA and MPRNA-RIP dataset
 * Lubelsky & Ulitsky Nature 2018
 * Zuckerman et al. Mol Cell 2020
 * Lubelsky et al. EMBO J 2021
-* Ron et al. 2021
+* Ron et al. Nature Communications 2022
+* von Kügelgen et al. bioRxiv 2021
+
 
 The counting is done using Java code, and downstream analysis using R
 
@@ -81,4 +83,13 @@ The next script filters the data and computes ratios both old-fashioned/simple/p
 
 
 Run the script:
-```Rscript /home/labs/ulitsky/igoru/R/rnaloc/processTwist.R config.txt```
+```Rscript processTwist.R config.txt```
+
+## Generating context plots
+
+The ratios can then be ploted accross the genes represented in the library. This script needs a configuration file that specifies the output of the previous step, the condition that needs to be plotted and the number of individual replicates. This file also has 2 columns (sample in `samples/config.txt`), key and value:
+* `rootDir` → Directory where the files sit
+* `finalTab` → Table that contains the ratios (output from the previous step)
+* `condition` → The ratio that will be plotted
+* `numOfReplicates` → The number of replicates plotted
+
