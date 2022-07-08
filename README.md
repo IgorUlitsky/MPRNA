@@ -92,6 +92,7 @@ The ratios can then be ploted accross the genes represented in the library. This
 * `finalTab` → Table that contains the ratios (output from the previous step)
 * `condition` → The ratio that will be plotted
 * `numOfReplicates` → The number of replicates plotted
+* `outFile` → The name of the output file
 
 Run with `Rscript ContextPlot.R CONFIG_FILE`
 A sample configuration file is available at samples/contextPlot.configFile.txt
