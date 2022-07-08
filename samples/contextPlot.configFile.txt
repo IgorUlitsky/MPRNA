@@ -1,0 +1,5 @@
+rootDir	/home/labs/ulitsky/igoru/
+finalTab	twistGFP_rep3.processTwist.finalTab.txt	
+condition	Cprime
+numOfReplicates	3
+
