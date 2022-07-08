@@ -93,3 +93,4 @@ The ratios can then be ploted accross the genes represented in the library. This
 * `condition` → The ratio that will be plotted
 * `numOfReplicates` → The number of replicates plotted
 
+Run with `Rscript ContextPlot.R samples/contextPlot.configFile.txt`
