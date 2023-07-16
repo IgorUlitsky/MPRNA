@@ -1,5 +1,5 @@
-# Ulitsky lab MPRNA counting suite
-Tools for quantifying and visualizing MPRNA datasets
+# Ulitsky lab MPRNA designing counting suite
+Tools for designing, quantifying and visualizing MPRNA datasets
 This suite of tools contains methods for analysis of MPRNA and MPRNA-RIP datasets desribed in:
 * Lubelsky & Ulitsky Nature 2018
 * Zuckerman et al. Mol Cell 2020
@@ -8,12 +8,34 @@ This suite of tools contains methods for analysis of MPRNA and MPRNA-RIP dataset
 * von Kügelgen et al. bioRxiv 2021
 
 
-The counting is done using Java code, and downstream analysis using R
+The counting is done using Java code, and downstream analysis using R. You will need to make sure Java is installed.
+
+## MPRNA library design
+
+```java -Xmx48000m -cp jar/compbioLib.jar:jar/compbio.jar:jar/picard.jar scripts.lincs.patch.AnalyzeConservedPatches design_patches OUT_FILE BED_FILE GENOME_2BIT_FILE DESCRIPTION_FILE TILE_LEN OFFSET_LEN_COVERED OFFSET_LEN_CONSERVED EXCLUDED_SEQS N_CONTROLS CUSTOM_SEQ_FILES CUSTOM_PRIMERS PATCH_FILE EXCLUDED_SPECIES```
+
+Parameters:
+* ``OUT_FILE`` base name of the output file
+* ``BED_FILE`` BED format file (can be gzipped) that contains transcript co-orindates (use `NONE` if not needed)
+* ``GENOME_FILE`` Genome sequence file in 2bit format
+* ``DESCRIPTION_FILE`` Tab-deliminated library description file (see below)
+* ``TILE_LEN`` length of the designed library tiles
+* ``OFFSET_LEN_COVERED`` length of offset for regular sequences
+* ``OFFSET_LEN_CONSERVED`` length of offset for conserved patches (provided in the ``PATCH_FILE``)
+* ``EXCLUDED_SEQS`` comma-separated list of sequences that have to be avoided in tiles (e.g., restriction enzyme cut sites)  (use `NONE` if not needed)
+* ``N_CONTROLS`` number of dinucleotide-shuffled controls to design for each sequence
+* ``CUSTOM_SEQ_FILES`` FASTA file of custom sequences for which tiles will be designed (separated by colons, use `NONE` if not needed)
+* ``CUSTOM_PRIMERS`` pairs of primers to use for the custom sequences, separated by : (separated by colons, use `NONE` if not needed)
+* ``PATCH_FILE`` BED file of conserved patches for design
+
+The ``DESCRIPTION_FILE`` is the key file as it contains information about the different subsets of the library.
+The first column determines the type of subset, and subsequent columns have additional information. The following categories are available:
+* 
 
 ## Initial counting of reads
-You will need to make sure Java is installed, and the FASTA file of your tiles without adapters is available in `LIBRARY.fa`. You will need to make a list of your sample names in `names.txt`. The commannds use LSF, but can be easily adapted to other computing setups.
+You need to make sure that the FASTA file of your tiles without adapters is available in `LIBRARY.fa`. You will need to make a list of your sample names in `names.txt`. The commannds use LSF, but can be easily adapted to other computing setups.
 
-Count reads using the simple counting, splitting each FASTQ into 100 slices that are counted indepedently:
+Count reads using simple counting, splitting each FASTQ into 100 slices that are counted indepedently:
 ```cat names.txt | while read p; do for i in {0..99}; do bsub -o $p.$i.log -R rusage[mem=5000] java -Xmx48000m -cp jar/compbioLib.jar:jar/compbio.jar:jar/picard.jar scripts.lincs.patch.AnalyzeConservedPatches count_reads LIBRARY.fa ${p}_1.fastq.gz -slice 100 $i $p.counts.$i.txt 1000000000; done; done```
 
 Additional parameters:
