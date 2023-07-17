@@ -5,8 +5,7 @@ This suite of tools contains methods for analysis of MPRNA and MPRNA-RIP dataset
 * Zuckerman et al. Mol Cell 2020
 * Lubelsky et al. EMBO J 2021
 * Ron et al. Nature Communications 2022
-* von Kügelgen et al. bioRxiv 2021
-
+* von Kügelgen et al. Nature Neuroscience 2023
 
 The counting is done using Java code, and downstream analysis using R. You will need to make sure Java is installed.
 
@@ -29,8 +28,21 @@ Parameters:
 * ``PATCH_FILE`` BED file of conserved patches for design
 
 The ``DESCRIPTION_FILE`` is the key file as it contains information about the different subsets of the library.
-The first column determines the type of subset, and subsequent columns have additional information. The following categories are available:
-* 
+It contains the following 6 columns:
+* *Subset type* - as described below
+* *Basic information* - e.g., file name, described below
+* *Subset name* - offsets used for tiling this subset
+* *Offset length* - offsets used for tiling this subset
+* *Prefix* - prefix (forward primer) appended to this sequence
+* *Suffix* - prefix (typically reverse complement of the reverse primer) appended to this sequence
+  
+The subset types categories are available:
+* ``BED`` - a name of the BED file is expected in the *Basic information*, the exonic sequences of each BED element are loaded and tiled with the offset lengths specified for this subset
+* ``BEDcirc`` - same as ``BED`` but for circular sequences (adding tiling also over the backspliced junction
+* ``Fragment`` - a specific genomic position (``CHR:START-END`` format) is expected in *Basic information*, and it is tiled
+* ``RefSeq`` - a specific transcript id is expected in *Basic information*, and it is extracted from the ``BED_FILE`` and tiled
+* ``RefSeqFind`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. These tiles are called *Context* tiles.
+* ``RefSeqFindMutate`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL:OLD:NEW`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. Then, all instances of ``OLD`` sequence are replaced with ``NEW`` sequence.
 
 ## Initial counting of reads
 You need to make sure that the FASTA file of your tiles without adapters is available in `LIBRARY.fa`. You will need to make a list of your sample names in `names.txt`. The commannds use LSF, but can be easily adapted to other computing setups.
