@@ -14,17 +14,17 @@ The counting is done using Java code, and downstream analysis using R. You will 
 ```java -Xmx48000m -cp jar/compbioLib.jar:jar/compbio.jar:jar/picard.jar scripts.lincs.patch.AnalyzeConservedPatches design_patches OUT_FILE BED_FILE GENOME_2BIT_FILE DESCRIPTION_FILE TILE_LEN OFFSET_LEN_COVERED OFFSET_LEN_CONSERVED EXCLUDED_SEQS N_CONTROLS CUSTOM_SEQ_FILES CUSTOM_PRIMERS PATCH_FILE```
 
 Parameters:
-* ``OUT_FILE`` base name of the output file
-* ``BED_FILE`` BED format file (can be gzipped) that contains transcript co-orindates (use `NONE` if not needed)
+* ``OUT_FILE`` Base name of the output file
+* ``BED_FILE`` BED format file (can be gzipped) that contains transcript coorindates (use `NONE` if not needed)
 * ``GENOME_FILE`` Genome sequence file in 2bit format
-* ``DESCRIPTION_FILE`` Tab-deliminated library description file (see below)
-* ``TILE_LEN`` length of the designed library tiles
-* ``OFFSET_LEN_COVERED`` length of offset for regular sequences
-* ``OFFSET_LEN_CONSERVED`` length of offset for conserved patches (provided in the ``PATCH_FILE``)
-* ``EXCLUDED_SEQS`` comma-separated list of sequences that have to be avoided in tiles (e.g., restriction enzyme cut sites)  (use `NONE` if not needed)
-* ``N_CONTROLS`` number of dinucleotide-shuffled controls to design for each sequence
+* ``DESCRIPTION_FILE`` Tab-delimited library description file (see below)
+* ``TILE_LEN`` Length of the designed library tiles
+* ``OFFSET_LEN_COVERED`` Length of offset for regular sequences
+* ``OFFSET_LEN_CONSERVED`` Length of offset for conserved patches (provided in the ``PATCH_FILE``)
+* ``EXCLUDED_SEQS`` Comma-separated list of sequences that have to be avoided in tiles (e.g., restriction enzyme cut sites)  (use `NONE` if not needed)
+* ``N_CONTROLS`` Number of dinucleotide-shuffled controls to design for each sequence
 * ``CUSTOM_SEQ_FILES`` FASTA file of custom sequences for which tiles will be designed (separated by colons, use `NONE` if not needed)
-* ``CUSTOM_PRIMERS`` pairs of primers to use for the custom sequences, separated by : (separated by colons, use `NONE` if not needed)
+* ``CUSTOM_PRIMERS`` pairs of primers to use for the custom sequences, separated by ``:`` (separated by colons, use `NONE` if not needed)
 * ``PATCH_FILE`` BED file of conserved patches for design
 
 The ``DESCRIPTION_FILE`` is the key file as it contains information about the different subsets of the library.
@@ -37,26 +37,29 @@ It contains the following 6 columns:
 * *Suffix* - prefix (typically reverse complement of the reverse primer) appended to this sequence
   
 The subset types categories are available:
-* ``BED`` - a name of the BED file is expected in the *Basic information*, the exonic sequences of each BED element are loaded and tiled with the offset lengths specified for this subset
-* ``File`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ":" and a name of a corresponding BED FILE
+* ``BED`` - a name of the BED file is expected in the *Basic information*; the exonic sequences of each BED element are loaded and tiled with the stops as specified in *Offset length*
+* ``File`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ``:`` and a name of a corresponding BED FILE
 * ``FileCirc`` - same as ``File``, but the sequences are circular and so back-splicing junction will also be tiled.
-* ``FileMutate`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ":" and a name of a corresponding BED FILE, and in the *Offset length* the expected format is OFFSET_LEN:START:END, and positions between START and END will be systematically mutated
-* ``BEDcirc`` - same as ``BED`` but for circular sequences (adding tiling also over the backspliced junction
+* ``FileMutate`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ":" and a name of a corresponding BED file (which will be used for creating the output BED file of the tile positions). In the *Offset length* column the expected format is OFFSET_LEN:START:END, and positions between START and END will be systematically mutated
+* ``BEDcirc`` - same as ``BED`` but for circular sequences (adding tiling also over the back-spliced junction)
 * ``Fragment`` - a specific genomic position (``CHR:START-END`` format) is expected in *Basic information*, and it is tiled
 * ``RefSeq`` - a specific transcript id is expected in *Basic information*, and it is extracted from the ``BED_FILE`` and tiled
-* ``RefSeqFind`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. These tiles are called *Context* tiles.
+* ``RefSeqFind`` - a specific pair ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional downstream bases are added to meet the final length of ``TOTAL``. These tiles are called *Context* tiles.
 * ``RefSeqFindMutate`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL:OLD:NEW`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. Then, all instances of ``OLD`` sequence are replaced with ``NEW`` sequence.
-* ``Repeat`` - a FASTA file is expected in *Basic information* and START-END-TOTAL in *Offset length*, the part of the sequence between START and END will be repeated in the tiles
+* ``Repeat`` - a FASTA file is expected in *Basic information* and START-END-TOTAL in *Offset length*; the part of the sequence between START and END will be repeated in the tiles
 * ``Delete`` - a FASTA file is expected in *Basic information* and START-END-FROM-TO in *Offset length*, the part of the sequence starting between START and END and in length between MIN_LEN and MAX_LEN will be deleted (and moved to the end of the title) in the tiles
-* ``RepeatSpecific`` - a kmer sequence is expected in *Basic information* and total length of the tile in *Offset length*, the kmer will be repeated to total length
-* ``MutateAndRepeatSpecific`` - as ``RepeatSpecific`` but systematic mutations of the kmer will also be produced
+* ``RepeatSpecific`` - a kmer sequence is expected in *Basic information* and total length of the tile in *Offset length*, the kmer will be repeated to total length.
+* ``MutateAndRepeatSpecific`` - as for ``RepeatSpecific`` but systematic mutations of the kmer will also be produced
 * ``InsertMer:KMER`` - a FASTA file is expected in *Basic information* and START-END-STEP in *Offset length*. The ``KMER`` will be inserted in each position between START and END, with the requested STEPs between them
 * ``ReplaceMer:KMER`` - as ``InsertMer`` but replacing instead of inserting the ``KMER``.
 * ``Mutate`` - a FASTA file is expected in ``BasicInformation`` and START-END-STEP in *Offset length*. Positions between START and END in each sequence, with the requested STEPs, will be systematically mutated
 * ``MutatePairs`` - as in ``Mutate``, but *Offset length* has format START-END-EXCLUDE_START-EXCLUDE_END and all pairs of positions between START and END but exclusing EXCLUDE_START-EXCLUDE_END are mutated
 * ``MutateMer:KMER_LEN`` - as in ``Mutate``, but instead of point mutations, kmers of length ``KMER_LEN`` are systematically mutated (A<->T, G<->C)
-* ``MutateShuffle:N_SHUFFLES`` - as in ``Mutate``, but instead of point mutations, the region between ``START`` and ``END`` is shuffled, and ``N_SHUFFLES`` random sequences are introduced in the same place
+* ``MutateShuffle:N_SHUFFLES`` - as in ``Mutate``, but instead of point mutations, the region between ``START`` and ``END`` is shuffled, and ``N_SHUFFLES`` random sequences are introduced in the same place (resulting in ``N_SHUFFLES`` tiles)
 
+This script produces the following output files:
+* ``OUT_FILE.patches.bed`` BED file with positions of the designed files (if available)
+* ``OUT_FILE.fa`` FASTA file with the tile sequences
 ## Initial counting of reads
 You need to make sure that the FASTA file of your tiles without adapters is available in `LIBRARY.fa`. You will need to make a list of your sample names in `names.txt`. The commannds use LSF, but can be easily adapted to other computing setups.
 
