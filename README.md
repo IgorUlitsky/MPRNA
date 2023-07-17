@@ -38,11 +38,24 @@ It contains the following 6 columns:
   
 The subset types categories are available:
 * ``BED`` - a name of the BED file is expected in the *Basic information*, the exonic sequences of each BED element are loaded and tiled with the offset lengths specified for this subset
+* ``File`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ":" and a name of a corresponding BED FILE
+* ``FileCirc`` - same as ``File``, but the sequences are circular and so back-splicing junction will also be tiled.
+* ``FileMutate`` - a name of the FASTA file is expected in the *Basic information*, which can be followed with ":" and a name of a corresponding BED FILE, and in the *Offset length* the expected format is OFFSET_LEN:START:END, and positions between START and END will be systematically mutated
 * ``BEDcirc`` - same as ``BED`` but for circular sequences (adding tiling also over the backspliced junction
 * ``Fragment`` - a specific genomic position (``CHR:START-END`` format) is expected in *Basic information*, and it is tiled
 * ``RefSeq`` - a specific transcript id is expected in *Basic information*, and it is extracted from the ``BED_FILE`` and tiled
 * ``RefSeqFind`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. These tiles are called *Context* tiles.
 * ``RefSeqFindMutate`` - a specific paired ``TRANCRIPT_ID:SEQ`` is expected in *Basic information* and a pair of numbers ``UPSTREAM:TOTAL:OLD:NEW`` is expected in *Offset length*. ``TRANSCRIPT_ID`` is extracted from the ``BED_FILE``, then ``SEQ`` sequence is located in it. Then ``UPSTREAM`` bases are appended to the ``SEQ`` and additional bases are added to meet the final length of ``TOTAL``. Then, all instances of ``OLD`` sequence are replaced with ``NEW`` sequence.
+* ``Repeat`` - a FASTA file is expected in *Basic information* and START-END-TOTAL in *Offset length*, the part of the sequence between START and END will be repeated in the tiles
+* ``Delete`` - a FASTA file is expected in *Basic information* and START-END-FROM-TO in *Offset length*, the part of the sequence starting between START and END and in length between MIN_LEN and MAX_LEN will be deleted (and moved to the end of the title) in the tiles
+* ``RepeatSpecific`` - a kmer sequence is expected in *Basic information* and total length of the tile in *Offset length*, the kmer will be repeated to total length
+* ``MutateAndRepeatSpecific`` - as ``RepeatSpecific`` but systematic mutations of the kmer will also be produced
+* ``InsertMer:KMER`` - a FASTA file is expected in *Basic information* and START-END-STEP in *Offset length*. The ``KMER`` will be inserted in each position between START and END, with the requested STEPs between them
+* ``ReplaceMer:KMER`` - as ``InsertMer`` but replacing instead of inserting the ``KMER``.
+* ``Mutate`` - a FASTA file is expected in ``BasicInformation`` and START-END-STEP in *Offset length*. Positions between START and END in each sequence, with the requested STEPs, will be systematically mutated
+* ``MutatePairs`` - as in ``Mutate``, but *Offset length* has format START-END-EXCLUDE_START-EXCLUDE_END and all pairs of positions between START and END but exclusing EXCLUDE_START-EXCLUDE_END are mutated
+* ``MutateMer:KMER_LEN`` - as in ``Mutate``, but instead of point mutations, kmers of length ``KMER_LEN`` are systematically mutated (A<->T, G<->C)
+* ``MutateShuffle:N_SHUFFLES`` - as in ``Mutate``, but instead of point mutations, the region between ``START`` and ``END`` is shuffled, and ``N_SHUFFLES`` random sequences are introduced in the same place
 
 ## Initial counting of reads
 You need to make sure that the FASTA file of your tiles without adapters is available in `LIBRARY.fa`. You will need to make a list of your sample names in `names.txt`. The commannds use LSF, but can be easily adapted to other computing setups.
