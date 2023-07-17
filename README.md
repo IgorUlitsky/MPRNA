@@ -11,7 +11,7 @@ The counting is done using Java code, and downstream analysis using R. You will 
 
 ## MPRNA library design
 
-```java -Xmx48000m -cp jar/compbioLib.jar:jar/compbio.jar:jar/picard.jar scripts.lincs.patch.AnalyzeConservedPatches design_patches OUT_FILE BED_FILE GENOME_2BIT_FILE DESCRIPTION_FILE TILE_LEN OFFSET_LEN_COVERED OFFSET_LEN_CONSERVED EXCLUDED_SEQS N_CONTROLS CUSTOM_SEQ_FILES CUSTOM_PRIMERS PATCH_FILE EXCLUDED_SPECIES```
+```java -Xmx48000m -cp jar/compbioLib.jar:jar/compbio.jar:jar/picard.jar scripts.lincs.patch.AnalyzeConservedPatches design_patches OUT_FILE BED_FILE GENOME_2BIT_FILE DESCRIPTION_FILE TILE_LEN OFFSET_LEN_COVERED OFFSET_LEN_CONSERVED EXCLUDED_SEQS N_CONTROLS CUSTOM_SEQ_FILES CUSTOM_PRIMERS PATCH_FILE```
 
 Parameters:
 * ``OUT_FILE`` base name of the output file
